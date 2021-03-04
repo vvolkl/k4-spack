@@ -23,7 +23,7 @@ jobs:
         cd ${GITHUB_WORKSPACE}/../spack
         #source share/spack/setup-env.sh
         #spack compiler find --scope site
-       # spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
+        # spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
         echo "abd" > key4hep-stack-concretization.log
         export KCON=$(cat key4hep-stack-concretization.log)
         echo "action_state=yellow" >> $GITHUB_ENV

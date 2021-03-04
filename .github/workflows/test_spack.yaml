@@ -23,8 +23,10 @@ jobs:
     - name: Concretize
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source spack/share/spack/setup-env.sh
-        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;' 
+        source spack/share/spack/setup-env.sh;\
+        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;\
+        export KCON=$(cat key4hep-stack-concretization.log)
+        echo "::set-env name=KCON::$KCON"' 
     - name: 'Comment PR'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'
@@ -32,8 +34,5 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          fetch('key4hep-stack-concretization.log')
-            .then(response => response.text())
-            .then(text => console.log(text))
-          github.issues.createComment({ issue_number, owner, repo, body: 'Hello world ! 👋' });
+          github.issues.createComment({ issue_number, owner, repo, body: "${{ env.KCON }}" });
 

@@ -21,9 +21,10 @@ jobs:
     - name: Concretize key4hep-stack
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
-        source share/spack/setup-env.sh
-        spack compiler find --scope site
-        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
+        #source share/spack/setup-env.sh
+        #spack compiler find --scope site
+       # spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
+        echo "abd" key4hep-stack-concretization.log
         export KCON=$(cat key4hep-stack-concretization.log)
         echo "action_state=yellow" >> $GITHUB_ENV
         #echo "KCON=${KCON}" >> $GITHUB_ENV
@@ -34,6 +35,6 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: "${{ env.action_state }}" });
+          github.issues.createComment({ issue_number, owner, repo, body: '${{ env.action_state }}' });
           #github.issues.createComment({ issue_number, owner, repo, body: "${{ env.KCON }}" });
 

@@ -1,4 +1,4 @@
-name: k4GenCITests
+name: k4CITests
 on: [push, pull_request]
 jobs:
   build:
@@ -25,6 +25,11 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source spack/share/spack/setup-env.sh;\
         spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;\
+        export KCON=$(cat key4hep-stack-concretization.log);\
+        echo "action_state=yellow" >> $GITHUB_ENV;\
+        echo "KCON=${KCON}" >> $GITHUB_ENV;' 
+    - name: Prepare Env Vars for comment
+      run: |
         export KCON=$(cat key4hep-stack-concretization.log);\
         echo "action_state=yellow" >> $GITHUB_ENV;\
         echo "KCON=${KCON}" >> $GITHUB_ENV;' 

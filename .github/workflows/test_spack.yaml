@@ -22,7 +22,15 @@ jobs:
         tar xfz spack.tar.gz && rm spack.tar.gz;'
     - name: Concretize
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package; 
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source spack/share/spack/setup-env.sh
         spack spec -I key4hep-stack;' # --test=all needs some work
-#    - uses: cvmfs-contrib/github-action-cvmfs@v2
+    - name: 'Comment PR'
+      uses: actions/github-script@0.3.0
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+          github.issues.createComment({ issue_number, owner, repo, body: 'Hello world ! 👋' });
 

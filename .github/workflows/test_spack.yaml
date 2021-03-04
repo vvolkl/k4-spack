@@ -24,12 +24,10 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source spack/share/spack/setup-env.sh;\
-        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;\
-        export KCON=$(cat key4hep-stack-concretization.log);\
-        echo "action_state=yellow" >> $GITHUB_ENV;\
-        echo "KCON=${KCON}" >> $GITHUB_ENV;' 
+        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;'
     - name: Prepare Env Vars for comment
       run: |
+        ls
         export KCON=$(cat key4hep-stack-concretization.log);\
         echo "action_state=yellow" >> $GITHUB_ENV;\
         echo "KCON=${KCON}" >> $GITHUB_ENV;' 

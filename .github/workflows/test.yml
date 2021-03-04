@@ -33,8 +33,10 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        teststr: ${{ env.action_state }}
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: '${{ env.action_state }}' });
+          github.issues.createComment({ issue_number, owner, repo, body: 'test123' });
+          github.issues.createComment({ issue_number, owner, repo, body: teststr });
           #github.issues.createComment({ issue_number, owner, repo, body: "${{ env.KCON }}" });
 

@@ -25,7 +25,6 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source spack/share/spack/setup-env.sh;\
         spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;'
-    - name: 'Upload Artifact'
     - uses: actions/upload-artifact@v2
       with:
         name: concretization-log-artifact

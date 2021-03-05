@@ -21,9 +21,9 @@ jobs:
     - name: Concretize key4hep-stack
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
-        source share/spack/setup-env.sh
-        spack compiler find --scope site
-        spack spec -I key4hep-stack | tee -a ${GITHUB_WORKSPACE}/key4hep-stack-concretization.log
+        #source share/spack/setup-env.sh
+        #spack compiler find --scope site
+        #spack spec -I key4hep-stack | tee -a ${GITHUB_WORKSPACE}/key4hep-stack-concretization.log
         #echo "abd" > key4hep-stack-concretization.log
         #export KCON=$(cat key4hep-stack-concretization.log)
         #echo "action_state=yellow" >> $GITHUB_ENV
@@ -34,7 +34,8 @@ jobs:
       run: |
         cd ${GITHUB_WORKSPACE}
         ls 
-        grep "^ -" ey4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
+        cp ${GITHUB_WORKSPACE}/.github/workflows/example key4hep-stack-concretization.log
+        grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
         echo "## New packages at next release after merge:" > gh-pr-comment.log
         echo " " >> gh-pr-comment.log
         echo "```" >> gh-pr-comment.log

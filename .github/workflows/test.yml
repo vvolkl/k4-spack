@@ -29,6 +29,8 @@ jobs:
         echo "action_state=yellow" >> $GITHUB_ENV
         #echo "KCON=${KCON}" >> $GITHUB_ENV
     - name: Comment PR 
+      env:
+        KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
         echo "abd" > key4hep-stack-concretization.log
@@ -44,16 +46,4 @@ jobs:
         curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
          -X POST -d "$(generate_post_data)"  \
          "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
-
-    - name: 'Comment PR'
-      uses: actions/github-script@0.3.0
-      if: github.event_name == 'pull_request'
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        #teststr: ${{ env.action_state }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: 'test123' });
-          #github.issues.createComment({ issue_number, owner, repo, body: teststr });
-          #github.issues.createComment({ issue_number, owner, repo, body: "${{ env.KCON }}" });
 

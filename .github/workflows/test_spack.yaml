@@ -1,4 +1,4 @@
-name: k4CITests
+name: concretize-lxplus
 on: [push, pull_request]
 jobs:
   build:
@@ -29,33 +29,5 @@ jobs:
       env:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
-        cd ${GITHUB_WORKSPACE}
-        grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
-        echo "## New packages at next release after merge:" > gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        cat key4hep-stack-concretization-newpackages.log >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "## Full List of Packages: " >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "<details>" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        cat key4hep-stack-concretization.log >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "</details>" >> gh-pr-comment.log
-        generate_post_data()
-        {
-          cat <<EOF
-        {
-          "body": "$(cat gh-pr-comment.log | sed -z 's/\n/\\n/g')"
-        }
-        EOF
-        }
-        PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-        curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
-         -X POST -d "$(generate_post_data)"  \
-         "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
-
+        ${GITHUB_WORKSPACE}/.github/scripts/generate_pr_comment.sh
+        ${GITHUB_WORKSPACE}/.github/scripts/post_pr_comment.sh

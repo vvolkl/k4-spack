@@ -1,4 +1,4 @@
-name: linux
+name: concretize-ubuntu
 
 on: [push, pull_request]
 
@@ -21,46 +21,6 @@ jobs:
     - name: Concretize key4hep-stack
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
-        #source share/spack/setup-env.sh
-        #spack compiler find --scope site
-        #spack spec -I key4hep-stack | tee -a ${GITHUB_WORKSPACE}/key4hep-stack-concretization.log
-        #echo "abd" > key4hep-stack-concretization.log
-        #export KCON=$(cat key4hep-stack-concretization.log)
-        #echo "action_state=yellow" >> $GITHUB_ENV
-        #echo "KCON=${KCON}" >> $GITHUB_ENV
-    - name: Comment PR 
-      env:
-        KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
-      run: |
-        cd ${GITHUB_WORKSPACE}
-        cp ${GITHUB_WORKSPACE}/.github/workflows/example key4hep-stack-concretization.log
-        grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
-        ls
-        echo "## New packages at next release after merge:" > gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        cat key4hep-stack-concretization-newpackages.log >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "## Full List of Packages: " >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "<details>" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        cat key4hep-stack-concretization.log >> gh-pr-comment.log
-        echo "\`\`\`" >> gh-pr-comment.log
-        echo " " >> gh-pr-comment.log
-        echo "</details>" >> gh-pr-comment.log
-        generate_post_data()
-        {
-          cat <<EOF
-        {
-          "body": "$(cat gh-pr-comment.log | sed -z 's/\n/\\n/g')"
-        }
-        EOF
-        }
-        PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-        #curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
-        # -X POST -d "$(generate_post_data)"  \
-        # "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
-
+        source share/spack/setup-env.sh
+        spack compiler find --scope site
+        spack spec -I key4hep-stack | tee -a ${GITHUB_WORKSPACE}/key4hep-stack-concretization.log

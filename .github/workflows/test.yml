@@ -39,11 +39,21 @@ jobs:
         echo "```" >> gh-pr-comment.log
         cat gh-pr-comment.log key4hep-stack-concretization-newpackages.log > gh-pr-comment.log
         echo "```" >> gh-pr-comment.log
+        echo " " >> gh-pr-comment.log
+        echo "## Full List of Packages: " >> gh-pr-comment.log
+        echo " " >> gh-pr-comment.log
+        echo "<details>" >> gh-pr-comment.log
+        echo " " >> gh-pr-comment.log
+        echo "```" >> gh-pr-comment.log
+        cat gh-pr-comment.log key4hep-stack-concretization.log > gh-pr-comment.log
+        echo "```" >> gh-pr-comment.log
+        echo " " >> gh-pr-comment.log
+        echo "</details>" >> gh-pr-comment.log
         generate_post_data()
         {
           cat <<EOF
         {
-          "body": "$(cat key4hep-stack-concretization.log | sed -z 's/\n/\\n/g')"
+          "body": "$(cat gh-pr-comment.log | sed -z 's/\n/\\n/g')"
         }
         EOF
         }

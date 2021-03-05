@@ -33,9 +33,9 @@ jobs:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
         cd ${GITHUB_WORKSPACE}
-        ls 
         cp ${GITHUB_WORKSPACE}/.github/workflows/example key4hep-stack-concretization.log
         grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
+        ls
         echo "## New packages at next release after merge:" > gh-pr-comment.log
         echo " " >> gh-pr-comment.log
         echo "```" >> gh-pr-comment.log

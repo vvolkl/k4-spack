@@ -28,6 +28,23 @@ jobs:
         export KCON=$(cat key4hep-stack-concretization.log)
         echo "action_state=yellow" >> $GITHUB_ENV
         #echo "KCON=${KCON}" >> $GITHUB_ENV
+    - name: Comment PR 
+      run: |
+        cd ${GITHUB_WORKSPACE}/../spack
+        echo "abd" > key4hep-stack-concretization.log
+        generate_post_data()
+        {
+          cat <<EOF
+        {
+          "body": "$(cat key4hep-stack-concretization.log | sed -z 's/\n/\\n/g')"
+        }
+        EOF
+        }
+        PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
+         -X POST -d "$(generate_post_data)"  \
+         "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+
     - name: 'Comment PR'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'

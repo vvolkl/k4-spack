@@ -21,19 +21,18 @@ jobs:
     - name: Concretize key4hep-stack
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
-        #source share/spack/setup-env.sh
-        #spack compiler find --scope site
-        # spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
-        echo "abd" > key4hep-stack-concretization.log
-        export KCON=$(cat key4hep-stack-concretization.log)
-        echo "action_state=yellow" >> $GITHUB_ENV
+        source share/spack/setup-env.sh
+        spack compiler find --scope site
+        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log
+        #echo "abd" > key4hep-stack-concretization.log
+        #export KCON=$(cat key4hep-stack-concretization.log)
+        #echo "action_state=yellow" >> $GITHUB_ENV
         #echo "KCON=${KCON}" >> $GITHUB_ENV
     - name: Comment PR 
       env:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
-        echo "abd" > key4hep-stack-concretization.log
         generate_post_data()
         {
           cat <<EOF

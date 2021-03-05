@@ -1,41 +1,36 @@
-name: linux
-
+name: k4CITests
 on: [push, pull_request]
-
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
     - uses: actions/checkout@v2
-    - name: Setup spack
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
+      with:
+        cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
+    - name: Start container
       run: |
-        mkdir ${GITHUB_WORKSPACE}/../spack
-        cd ${GITHUB_WORKSPACE}/../spack
-        git clone --depth 1 https://github.com/key4hep/spack .
-        cp -r ${GITHUB_WORKSPACE} var/spack/repos/
-        cp var/spack/repos/$(basename ${GITHUB_REPOSITORY})/config/packages.yaml etc/spack
-        source share/spack/setup-env.sh
-        spack repo add --scope site ${PWD}/var/spack/repos/$(basename ${GITHUB_REPOSITORY})
-    - name: Concretize key4hep-stack
+        docker run -it --name CI_container -e GITHUB_ENV=${GITHUB_ENV}  -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
+    - name: Setup container
       run: |
-        cd ${GITHUB_WORKSPACE}/../spack
-        #source share/spack/setup-env.sh
-        #spack compiler find --scope site
-        #spack spec -I key4hep-stack | tee -a ${GITHUB_WORKSPACE}/key4hep-stack-concretization.log
-        #echo "abd" > key4hep-stack-concretization.log
-        #export KCON=$(cat key4hep-stack-concretization.log)
-        #echo "action_state=yellow" >> $GITHUB_ENV
-        #echo "KCON=${KCON}" >> $GITHUB_ENV
+        docker exec CI_container /bin/bash -c " ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;"
+
+    - name: Setup Spack
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        curl -L -o spack.tar.gz https://gitlab.cern.ch/key4hep/k4-deploy/-/jobs/artifacts/release/raw/key4hep-spack_centos7-cvmfs.tar.gz?job=setup_spack_push;\
+        tar xfz spack.tar.gz && rm spack.tar.gz;'
+    - name: Concretize
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source spack/share/spack/setup-env.sh;\
+        spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;'
     - name: Comment PR 
       env:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
         cd ${GITHUB_WORKSPACE}
-        cp ${GITHUB_WORKSPACE}/.github/workflows/example key4hep-stack-concretization.log
         grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
-        ls
         echo "## New packages at next release after merge:" > gh-pr-comment.log
         echo " " >> gh-pr-comment.log
         echo "\`\`\`" >> gh-pr-comment.log
@@ -60,7 +55,7 @@ jobs:
         EOF
         }
         PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-        #curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
-        # -X POST -d "$(generate_post_data)"  \
-        # "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+        curl -s -H "Authorization: token ${KEY4HEP_COMMENT_BOT_TOKEN}" \
+         -X POST -d "$(generate_post_data)"  \
+         "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
 

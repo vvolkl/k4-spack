@@ -33,6 +33,12 @@ jobs:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |
         cd ${GITHUB_WORKSPACE}/../spack
+        grep "^ -" key4hep-stack-concretization.log > key4hep-stack-concretization-newpackages.log
+        echo "New packages at next release after merge:" > gh-pr-comment.log
+        echo " " >> gh-pr-comment.log
+        echo "```" >> gh-pr-comment.log
+        cat gh-pr-comment.log key4hep-stack-concretization-newpackages.log > gh-pr-comment.log
+        echo "```" >> gh-pr-comment.log
         generate_post_data()
         {
           cat <<EOF

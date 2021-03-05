@@ -26,7 +26,7 @@ jobs:
         source spack/share/spack/setup-env.sh;\
         spack spec -I key4hep-stack | tee -a key4hep-stack-concretization.log;'
     - name: Comment PR 
-      on: pull-request
+      if: github.event_name == 'pull_request'
       env:
         KEY4HEP_COMMENT_BOT_TOKEN: ${{ secrets.KEY4HEP_COMMENT_BOT_TOKEN }}
       run: |

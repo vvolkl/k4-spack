@@ -13,7 +13,8 @@
  echo ' - $SPACK_ROOT/var/spack/repos/key4hep-spack' >> spack/etc/spack/repos.yaml
  tar -czf key4hep-spack.tar.gz spack
  cp ${PWD}/spack/var/spack/repos/key4hep-spack/config/cvmfs_build/upstreams.yaml spack/etc/spack/
- compiler setup 
- spack load gcc
- spack compiler find --scope site
- tar -czf key4hep-spack_centos7-cvmfs.tar.gz spack
+ cp config/compilers_centos7_cvmfs.yaml spack/etc/spack/compilers.yaml
+# compiler setup 
+# spack load gcc
+# spack compiler find --scope site
+# tar -czf key4hep-spack_centos7-cvmfs.tar.gz spack

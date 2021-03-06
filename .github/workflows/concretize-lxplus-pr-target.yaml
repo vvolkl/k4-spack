@@ -10,7 +10,7 @@ jobs:
             -o /dev/null --silent --head \
             -H "Authorization: token ${GITHUB_TOKEN}" \
           --write-out '%{http_code}\n' \
-          https://api.github.com/orgs/key4hep/members/${GITHUB_ACTOR}\
+          https://api.github.com/orgs/key4hep/members/vvolkl\
           )
         if [ "$ismember" = 204 ]
         then 

@@ -30,7 +30,8 @@ jobs:
         docker run -it --name CI_container -e GITHUB_ENV=${GITHUB_ENV}  -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
     - name: Setup container
       run: |
-        docker exec CI_container /bin/bash -c " ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;"
+        docker exec CI_container /bin/bash -c ' ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;\
+        yum -y install gcc;'
 
     - name: Setup Spack
       run: |

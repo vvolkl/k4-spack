@@ -8,7 +8,7 @@ jobs:
       run: |
         ismember=$(curl \
             -o /dev/null --silent --head \
-            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           --write-out '%{http_code}\n' \
           https://api.github.com/orgs/key4hep/members/vvolkl\
           )

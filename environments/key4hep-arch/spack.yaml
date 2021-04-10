@@ -1,0 +1,16 @@
+spack:
+  config:
+    install_tree:
+      root: ~/.spack/spackages
+    module_roots:
+      lmod: ~/.spack/spackages/modules
+      tcl: ~/.sapck/spackages/modules
+  view: false
+  include:
+  - geant4-data.yaml
+  - key4hep-packages.yaml
+  - arch-compilers.yaml
+  - arch-packages.yaml
+  specs:
+  - k4fwcore
+  - root

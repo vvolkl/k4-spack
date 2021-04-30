@@ -150,3 +150,7 @@ packages:
     target: []
     providers: {}
     compiler: []
+  gcc:
+    target: [haswell]
+  groff:
+    variants: ~pdf

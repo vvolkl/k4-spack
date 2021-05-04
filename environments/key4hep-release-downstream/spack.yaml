@@ -1,0 +1,14 @@
+spack:
+upstreams:
+  spack-instance-1:
+      install_tree: /cvmfs/sw.hsf.org/spackages2/
+  spack-instance-1:
+      install_tree: /cvmfs/sw.hsf.org/spackages/
+  config:
+    install_tree:
+      root: ~/.spack/opt
+  view: false
+  include:
+  - geant4-data.yaml
+  - key4hep-packages.yaml
+  - key4hep-upstreams.yaml

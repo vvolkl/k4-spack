@@ -7,7 +7,7 @@ packages:
     providers:
       gl: [mesa]
       glu: [mesa]
-    compiler: []
+    compiler: [gcc@8.3.0]
   guinea-pig:
     variants: +fftw3
     buildable: true

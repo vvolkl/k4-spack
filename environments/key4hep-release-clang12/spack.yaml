@@ -10,5 +10,3 @@ spack:
     all:
       compiler: [clang@12.0.0]
   view: false
-  repos:
-  - /home/plfernan/workspace/key4hep-spack

@@ -1,0 +1,33 @@
+name: concretize-lxplus
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
+      with:
+        cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
+    - name: Start container
+      run: |
+        docker run -it --name CI_container -e GITHUB_ENV=${GITHUB_ENV}  -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
+    - name: Setup container
+      run: |
+        docker exec CI_container /bin/bash -c " ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;"
+
+    - name: Setup Spack
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        git clone --depth 1 https://github.com/key4hep/spack;'
+    - name: Simple Install
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source spack/share/spack/setup-env.sh;\
+        spack env activate environments/key4hep-release-clang-12/
+        spack add pkgconf
+        spack install | tee -a key4hep-stack-concretization.log;'
+    - uses: actions/upload-artifact@v2
+      with:
+        name: concretization-log-artifact
+        path: key4hep-stack-concretization.log
+        retention-days: 5

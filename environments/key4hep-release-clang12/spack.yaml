@@ -3,6 +3,11 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
+  config:
+    install_tree:
+      root: $tempdir/$user/spackinstall
+    stage:
+
   include:
   - key4hep-packages.yaml
   - compilers.yaml

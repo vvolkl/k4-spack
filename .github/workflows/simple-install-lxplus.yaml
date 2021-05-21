@@ -24,7 +24,7 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source spack/share/spack/setup-env.sh;\
         spack repo add . ;\
-        spack env activate environments/key4hep-release-clang12\;
+        spack env activate environments/key4hep-release-clang12 ;\
         spack add pkgconf;\
         spack install | tee -a key4hep-stack-concretization.log;'
     - uses: actions/upload-artifact@v2
